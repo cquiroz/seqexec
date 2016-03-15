@@ -3,7 +3,7 @@ enablePlugins(ScalaJSPlugin)
 name := "seqexec-web"
 
 // Versions
-val reactJsVersion = "0.4.0"
+val reactJsVersion = "0.10.4"
 
 lazy val commonSettings = Seq(
   organization := "edu.gemini",
@@ -29,6 +29,8 @@ lazy val root = project.in(file("."))
 lazy val seqexec_web = crossProject.in(file("."))
   .settings(commonSettings: _*)
   .jvmSettings(
+    // Support stopping the running server
+    mainClass in reStart := Some("edu.gemini.seqexec.web.server.play.WebServerLauncher"),
     libraryDependencies ++= Seq(
       // NOTE this doesn't work on OSGI, http4s is not OSGi friendly
       // http4s
