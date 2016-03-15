@@ -1,5 +1,3 @@
-enablePlugins(ScalaJSPlugin)
-
 name := "seqexec-web"
 
 // Versions
@@ -18,17 +16,38 @@ lazy val commonSettings = Seq(
     "Gemini Repository" at "http://sbfswgosxdev-mp1.cl.gemini.edu:8081/artifactory/libs-release-local"
 )
 
-lazy val root = project.in(file("."))
-  .aggregate(seqexec_web_JS, seqexec_web_JVM)
+// a special crossProject for configuring a JS/JVM/shared structure
+lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
+  .settings(commonSettings: _*)
+
+lazy val sharedJVM = shared.jvm.settings(name := "sharedJVM")
+
+lazy val sharedJS = shared.js.settings(name := "sharedJS")
+
+
+lazy val client:Project = project.in(file("js"))
   .settings(commonSettings: _*)
   .settings(
-    publish := {},
-    publishLocal := {}
+    // Put the generated JS on jvm's resource for easy running
+    artifactPath in fastOptJS :=
+      (resourceManaged in server in Compile).value /
+        ((moduleName in fastOptJS).value + "-fastopt.js"),
+    libraryDependencies ++= Seq(
+      "org.scala-js"                      %%% "scalajs-dom" % "0.8.0",
+      "com.github.japgolly.scalajs-react" %%% "core"        % reactJsVersion,
+      "com.github.japgolly.scalajs-react" %%% "extra"       % reactJsVersion,
+      "com.github.japgolly.scalacss"      %%% "core"        % "0.4.0",
+      "com.github.japgolly.scalacss"      %%% "ext-react"   % "0.4.0",
+      "com.github.japgolly.fork.scalaz"   %%% "scalaz-core" % "7.2.0", // note that the scalaz version for scala.js is a bit old
+      "com.lihaoyi"                       %%% "utest"       % "0.3.1" % "test"
+    )
   )
+  .enablePlugins(ScalaJSPlugin)
+  .dependsOn(sharedJVM)
 
-lazy val seqexec_web = crossProject.in(file("."))
+lazy val server = project.in(file("jvm"))
   .settings(commonSettings: _*)
-  .jvmSettings(
+  .settings(
     // Support stopping the running server
     mainClass in reStart := Some("edu.gemini.seqexec.web.server.play.WebServerLauncher"),
     libraryDependencies ++= Seq(
@@ -48,18 +67,5 @@ lazy val seqexec_web = crossProject.in(file("."))
       "org.scalaz"        %% "scalaz-concurrent"    % "7.1.6"
     )
   )
-  .jsSettings(
-    //
-    libraryDependencies ++= Seq(
-      "org.scala-js"                      %%% "scalajs-dom" % "0.8.0",
-      "com.github.japgolly.scalajs-react" %%% "core"        % reactJsVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra"       % reactJsVersion,
-      "com.github.japgolly.scalacss"      %%% "core"        % "0.4.0",
-      "com.github.japgolly.scalacss"      %%% "ext-react"   % "0.4.0",
-      "com.github.japgolly.fork.scalaz"   %%% "scalaz-core" % "7.2.0", // note that the scalaz version for scala.js is a bit old
-      "com.lihaoyi"                       %%% "utest"       % "0.3.1" % "test"
-    )
-  )
+  .dependsOn(sharedJS)
 
-lazy val seqexec_web_JS = seqexec_web.js
-lazy val seqexec_web_JVM = seqexec_web.jvm
