@@ -16,7 +16,7 @@ object SeqexecApp extends JSApp {
 
   def main(): Unit = {
     //GlobalStyles.addToDocument()
-
+    
     ReactDOM.render(SeqexecUI(), document.getElementById("content"))
   }
 }
