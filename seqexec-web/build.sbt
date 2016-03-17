@@ -1,9 +1,9 @@
+import Settings._
 
 name := "seqexec-web"
 
 lazy val commonSettings = Seq(
-  version := "0.1.0-SNAPSHOT",
-  scalaVersion := Settings.versions.scala,
+  scalaVersion := LibraryVersions.scala,
   // Common libraries
   libraryDependencies ++= Seq(
     "com.lihaoyi"    %%% "upickle"     % "0.3.8",
@@ -41,15 +41,18 @@ lazy val seqexec_web_client:Project = project.in(file("client"))
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "org.scala-js"                      %%% "scalajs-dom" % Settings.versions.scalaDom,
-      "com.github.japgolly.scalajs-react" %%% "core"        % Settings.versions.scalajsReact,
-      "com.github.japgolly.scalajs-react" %%% "extra"       % Settings.versions.scalajsReact,
-      "com.github.japgolly.scalacss"      %%% "core"        % Settings.versions.scalaCSS,
-      "com.github.japgolly.scalacss"      %%% "ext-react"   % Settings.versions.scalaCSS
+      "org.scala-js"                      %%% "scalajs-dom" % LibraryVersions.scalaDom,
+      "com.github.japgolly.scalajs-react" %%% "core"        % LibraryVersions.scalajsReact,
+      "com.github.japgolly.scalajs-react" %%% "extra"       % LibraryVersions.scalajsReact,
+      "com.github.japgolly.scalacss"      %%% "core"        % LibraryVersions.scalaCSS,
+      "com.github.japgolly.scalacss"      %%% "ext-react"   % LibraryVersions.scalaCSS
     )
   )
   .enablePlugins(ScalaJSPlugin)
   .dependsOn(seqexec_web_shared_JS)
+
+// Reference to parent project. TODO put them in a single location
+lazy val seqexec_server = project.in(file("common/edu.gemini.seqexec.server"))
 
 lazy val seqexec_web_server = project.in(file("server"))
   .settings(commonSettings: _*)
@@ -64,7 +67,7 @@ lazy val seqexec_web_server = project.in(file("server"))
       "com.typesafe.play" %% "play-netty-server"    % "2.4.6",
 
       // OCS
-      "edu.gemini.ocs"    %% "edu-gemini-seqexec-server" % "2016001.1.1",
+      //"edu.gemini.ocs"    %% "edu-gemini-seqexec-server" % "2016001.1.1",
 
       "org.scalaz"        %% "scalaz-concurrent"    % "7.1.6"
     ),
@@ -83,5 +86,5 @@ lazy val seqexec_web_server = project.in(file("server"))
     watchSources ~= { t:Seq[java.io.File] => {t.filter(includeInTrigger)} }
 
   )
-  .dependsOn(seqexec_web_shared_JVM)
+  .dependsOn(seqexec_web_shared_JVM, seqexec_server)
 
