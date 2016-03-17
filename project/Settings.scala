@@ -1,14 +1,11 @@
-import sbt._
-
 /**
- * Application settings. Configure the build for your application here.
- * You normally don't have to touch the actual build definition after this.
+ * Application settings
  */
 object Settings {
-  /** The name of your application */
+  /** The name of the application */
   val name = "seqexec"
 
-  /** The version of your application */
+  /** Top level version */
   val version = "1.0.0"
 
   /** Options for the scala compiler */
@@ -19,7 +16,7 @@ object Settings {
     "-feature"
   )
 
-  /** Declare global dependency versions here to avoid mismatches in multi part dependencies */
+  /** global dependency versions */
   object versions {
     val scala = "2.11.7"
     val scalaDom = "0.9.0"

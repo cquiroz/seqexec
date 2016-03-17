@@ -6,9 +6,10 @@ lazy val commonSettings = Seq(
   scalaVersion := Settings.versions.scala,
   // Common libraries
   libraryDependencies ++= Seq(
-    "com.lihaoyi"   %%% "upickle"     % "0.3.8",
-    "org.scalaz"    %%% "scalaz-core" % "7.2.1",
-    "org.scalatest" %%% "scalatest"   % "3.0.0-M15" % "test"
+    "com.lihaoyi"    %%% "upickle"     % "0.3.8",
+    "org.scalaz"     %%% "scalaz-core" % "7.2.1",
+    "org.scalatest"  %%% "scalatest"   % "3.0.0-M15" % "test",
+    "org.scalacheck" %%% "scalacheck"  % "1.12.5" % "test"
   ),
   // Gemini repository
   resolvers += 
@@ -24,7 +25,8 @@ lazy val seqexec_web_shared = (crossProject.crossType(CrossType.Pure) in file("s
 
 lazy val seqexec_web_shared_JVM = seqexec_web_shared.jvm
 
-lazy val seqexec_web_shared_JS = seqexec_web_shared.js
+lazy val seqexec_web_shared_JS = seqexec_web_shared.js.settings(
+  )
 
 def includeInTrigger(f: java.io.File): Boolean =
   f.isFile && {
@@ -33,7 +35,7 @@ def includeInTrigger(f: java.io.File): Boolean =
   }
 
 lazy val seqexec_web = project.in(file("."))
-  .aggregate(seqexec_web_server, seqexec_web_client)
+  .aggregate(seqexec_web_server, seqexec_web_client, seqexec_web_shared_JS, seqexec_web_shared_JVM)
 
 lazy val seqexec_web_client:Project = project.in(file("client"))
   .settings(commonSettings: _*)
