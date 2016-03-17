@@ -1,12 +1,14 @@
 
+name := "seqexec-web"
+
 lazy val commonSettings = Seq(
-  organization := "edu.gemini",
   version := "0.1.0-SNAPSHOT",
-  scalaVersion := "2.11.7",
+  scalaVersion := Settings.versions.scala,
   // Common libraries
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %%% "upickle"     % "0.3.8",
-    "org.scalaz"  %%% "scalaz-core" % "7.2.1"
+    "com.lihaoyi"   %%% "upickle"     % "0.3.8",
+    "org.scalaz"    %%% "scalaz-core" % "7.2.1",
+    "org.scalatest" %%% "scalatest"   % "3.0.0-M15" % "test"
   ),
   // Gemini repository
   resolvers += 
@@ -37,12 +39,11 @@ lazy val seqexec_web_client:Project = project.in(file("client"))
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "org.scala-js"                      %%% "scalajs-dom" % "0.8.0",
+      "org.scala-js"                      %%% "scalajs-dom" % Settings.versions.scalaDom,
       "com.github.japgolly.scalajs-react" %%% "core"        % Settings.versions.scalajsReact,
       "com.github.japgolly.scalajs-react" %%% "extra"       % Settings.versions.scalajsReact,
-      "com.github.japgolly.scalacss"      %%% "core"        % "0.4.0",
-      "com.github.japgolly.scalacss"      %%% "ext-react"   % "0.4.0",
-      "com.lihaoyi"                       %%% "utest"       % "0.3.1" % "test"
+      "com.github.japgolly.scalacss"      %%% "core"        % Settings.versions.scalaCSS,
+      "com.github.japgolly.scalacss"      %%% "ext-react"   % Settings.versions.scalaCSS
     )
   )
   .enablePlugins(ScalaJSPlugin)

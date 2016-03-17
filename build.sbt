@@ -1,4 +1,4 @@
-name := "seqexec"
+name := Settings.name
 
 organization in Global := "edu.gemini.ocs"
 

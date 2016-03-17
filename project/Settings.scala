@@ -6,7 +6,7 @@ import sbt._
  */
 object Settings {
   /** The name of your application */
-  val name = "ocs"
+  val name = "seqexec"
 
   /** The version of your application */
   val version = "1.0.0"
@@ -22,7 +22,7 @@ object Settings {
   /** Declare global dependency versions here to avoid mismatches in multi part dependencies */
   object versions {
     val scala = "2.11.7"
-    val scalaDom = "0.8.2"
+    val scalaDom = "0.9.0"
     val scalajsReact = "0.10.4"
     val scalaCSS = "0.4.0"
   }
